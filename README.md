@@ -21,7 +21,7 @@
 ### HIL(Hardware-in-the-Loop) 구조
 카메라 비전 센서 및 고전압 전자석의 부재를 대체하기 위해, 센서 입력과 액추에이터 출력을 모사하는 실증 시스템을 구축하여 제어기의 성능을 검증했습니다.
 
-<img width="500" alt="Hardware Setup" src="./docs/hardware.jpg" />
+<img width="500" alt="Hardware Setup" src="./docs/hardware.png" />
 
 - **입력 (가변저항):** 4초 주기로 스텝(Step) 입력을 생성하여 쇠구슬의 목표 간극($r$)을 제어기에 지시합니다.
 - **제어/관측 (라즈베리파이 4):** 1ms/2ms 주기 인터럽트 내에서 가상 물리 엔진 연산 및 Luenberger 관측기를 통한 상태 추정을 수행합니다.
