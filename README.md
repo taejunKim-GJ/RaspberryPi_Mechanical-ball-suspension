@@ -18,7 +18,7 @@
 
 본 프로젝트는 수학적 모델링을 검증하는 **시뮬레이션 환경**과 이를 실제 장비에서 실시간으로 구동하는 **HIL(Hardware-in-the-Loop) 실증 환경**으로 나누어 구성되었습니다.
 
-### HIL(Hardware-in-the-Loop) 구조
+### 하드웨어 구조 (HIL)
 카메라 비전 센서 및 고전압 전자석의 부재를 대체하기 위해, 센서 입력과 액추에이터 출력을 모사하는 실증 시스템을 구축하여 제어기의 성능을 검증했습니다.
 
 <img width="500" alt="Hardware Setup" src="./docs/hardware.png" />
