@@ -146,8 +146,8 @@ sudo dmesg | tail -n 10   # 해제가 잘되었는지 커널 로그 확인
 
 
 **⏱️ 주요 시연 구간 (Timestamps):**
-- `25:38 ~ 27:36` : MATLAB을 활용한 디지털 트윈 시뮬레이션 시연
-- `36:30 ~ 41:45` : 임베디드 보드 하드웨어(HIL) 실시간 제어 시연
+- `25:38 ~ 27:36` : MATLAB 기반 제어기·관측기 Simulation
+- `36:30 ~ 41:45` : Raspberry Pi 실제 Target 제어 시연
 
 **📄 프로젝트 문서:**
 - **발표 자료(PDF):** [MBS_PPT.pdf](./docs/MBS_PPT.pdf)
