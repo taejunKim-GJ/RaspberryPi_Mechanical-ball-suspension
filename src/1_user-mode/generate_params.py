@@ -51,7 +51,7 @@ ts_o = 0.1    # 0.1초 정착 시간
 # ====================================================
 def calc_poles(Mp, ts, is_observer=False):
     zeta = -np.log(Mp) / np.sqrt(np.pi**2 + (np.log(Mp))**2)
-    wn = 4 / (zeta * ts)  # 5% 정착 시간 기준 공식
+    wn = 4 / (zeta * ts)  # 2% 정착 시간 기준 공식
     
     sigma = -zeta * wn
     wd = wn * np.sqrt(max(0, 1 - zeta**2))

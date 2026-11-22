@@ -48,7 +48,7 @@ int main() {
     }
     char sync_buf[1];
 
-    double x[3] = {x10, x20, x30};     // 실제 물리 플랜트 시작점
+    double x[3] = {x10, x20, x30};     // 실제 쇠구슬의 물리적 상태
     double x_hat[3] = {x10, x20, x30}; // 관측기 시작점 일치 (Bumpless Transfer)
     
     int raw = i2cReadWordData(i2c_h, A0_VAL_REG);
@@ -89,7 +89,7 @@ int main() {
             
             if (step_size > 0.001) { 
                 allowed_error = step_size * 0.02;
-                if (allowed_error < 0.0005) allowed_error = 0.0005; 
+                if (allowed_error < 0.0002) allowed_error = 0.0002; 
 
                 r_active = r_preview; 
                 step_start_time = gpioTick();

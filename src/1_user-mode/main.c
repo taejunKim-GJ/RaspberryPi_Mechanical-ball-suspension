@@ -42,7 +42,7 @@ int main() {
 
     double x[3] = {x10, x20, x30};    // 실제 쇠구슬의 물리적 상태
     // double x_hat[3] = {0.0, 0.0, 0.0}; // 관측기 상태
-    double x_hat[3] = {x10, x20, x30};  // (Bumpless Transfer)
+    double x_hat[3] = {x10, x20, x30};  // 관측기 시작점 일치 (Bumpless Transfer)
 
     
     int raw = i2cReadWordData(i2c_h, A0_VAL_REG);
@@ -82,7 +82,7 @@ int main() {
             
             if (step_size > 0.001) { 
                 allowed_error = step_size * 0.02;
-                if (allowed_error < 0.0005) allowed_error = 0.0005; 
+                if (allowed_error < 0.0002) allowed_error = 0.0002; // ADC 분해능 및 센서 노이즈를 고려한 최소 오차 하한선 설정
 
                 r_active = r_preview; 
                 step_start_time = gpioTick();

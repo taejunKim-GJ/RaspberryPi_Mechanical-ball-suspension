@@ -3,8 +3,8 @@
 #include <math.h>
 #include <stdint.h>
 #include <signal.h>
-#include <sched.h>      // [RTOS 추가] 실시간 스케줄링 헤더
-#include <sys/mman.h>   // [RTOS 추가] 메모리 락 헤더
+#include <sched.h>      // [RT 추가] 실시간 스케줄링 헤더
+#include <sys/mman.h>   // [RT 추가] 메모리 락 헤더
 #include <pigpio.h>
 #include "matrix_params.h" 
 
@@ -43,7 +43,7 @@ void set_realtime_priority() {
 }
 
 int main() {
-    // [RTOS 적용] 부팅 즉시 실시간 권한 획득
+    // [RT 적용] 부팅 즉시 실시간 권한 획득
     set_realtime_priority();
 
     if (gpioInitialise() < 0) return 1;
@@ -61,8 +61,8 @@ int main() {
     uint32_t loop_time_us = (uint32_t)(TS * 1000000.0); 
 
     double x[3] = {x10, x20, x30};    // 실제 쇠구슬의 물리적 상태
-    // double x_hat[3] = {0.0, 0.0, 0.0}; 
-    double x_hat[3] = {x10, x20, x30};  // (Bumpless Transfer)
+    // double x_hat[3] = {0.0, 0.0, 0.0}; // 관측기 상태
+    double x_hat[3] = {x10, x20, x30};  // 관측기 시작점 일치 (Bumpless Transfer)
 
     int raw = i2cReadWordData(i2c_h, A0_VAL_REG);
     int adc_val = ((raw & 0xFF) << 8) | ((raw >> 8) & 0xFF);
@@ -70,6 +70,7 @@ int main() {
     double r_preview;  
     double r_active = initial_pos;   
     
+    // 모터 초기화
     double angle_init = (x[0] / 0.04) * 180.0;
     gpioServo(SERVO_PIN, 500 + (int)(angle_init * 11.11));
     gpioDelay(1000000); 
@@ -99,7 +100,7 @@ int main() {
             
             if (step_size > 0.001) { 
                 allowed_error = step_size * 0.02;
-                if (allowed_error < 0.0005) allowed_error = 0.0005; 
+                if (allowed_error < 0.0002) allowed_error = 0.0002; // ADC 분해능 및 센서 노이즈를 고려한 최소 오차 하한선 설정
 
                 r_active = r_preview; 
                 step_start_time = gpioTick();

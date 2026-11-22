@@ -46,7 +46,7 @@
     │   ├── Makefile
     │   ├── generate_params.py
     │   ├── main.c 
-    │   └── main2.c          # POSIX RTOS(SCHED_FIFO, mlockall) 적용 버전
+    │   └── main2.c          # RT(SCHED_FIFO, mlockall) 적용 버전
     │
     └── 2_kernel-hybrid-mode/# [Step 2] HRTimer 기반 Kernel Mode ISR 통신 적용 구현
         ├── Makefile
@@ -67,8 +67,9 @@
 - **ZOH 이산화 한계 분석:** 샘플링 주기를 1ms, 5ms, 10ms로 변화시키며 시뮬레이션한 결과, 지연이 클수록 위상 지연이 누적되어 시스템이 발산함을 증명하였습니다.
 
 ### 3) DT Realization: 임베디드 보드 포팅 및 Kernel HRTimer 기반 주기 동기화
-- **커널 모드 ISR 적용:** 범용 OS의 스케줄링 간섭을 배제하기 위해, 유저 레벨 타이머(폴링) 대신 Kernel Space의 HRTimer가 설정된 주기마다 Wait Queue를 깨우고, User Space 제어 프로그램이 `/dev/mbs_sync`의 blocking `read()`에서 깨어나 제어·관측 연산을 수행하도록 구성했습니다.
+- **Kernel-Hybrid 모드:** 범용 OS의 스케줄링 간섭 및 타이머 누적 오차(Drift)를 배제하기 위해, 유저 레벨 폴링 대신 Kernel Space의 HRTimer가 설정된 주기마다 Wait Queue를 트리거하도록 구현했습니다. User Space 제어 프로그램은 /dev/mbs_sync의 blocking read()를 통해 커널 시계와 강제로 동기화되어 정밀한 제어·관측 연산을 수행합니다.
 
+- **User-Level RT 모드:** 커널 모듈을 적재하지 않는 유저 레벨 환경에서도 실시간성을 확보하기 위해, 리눅스 선점형 실시간 스케줄러 정책인 SCHED_FIFO로 최고 수준의 우선순위를 부여하고, 메모리 락(mlockall)을 통해 스왑 지연을 원천 차단했습니다.
 
 ### 4) 구동 모드별 제어 성능(정착 시간) 비교
 OS 스케줄링 간섭에 따른 제어 성능 저하를 검증하기 위해, 세 가지 구동 모드에서 동일한 스텝 입력(1.00cm)을 인가하여 2% 정착 시간을 측정 및 비교했습니다.
@@ -79,7 +80,7 @@ OS 스케줄링 간섭에 따른 제어 성능 저하를 검증하기 위해, �
 | **유저 모드** | `main2.c` (SCHED_FIFO) | **0.499 s** | 프로세스 독점 및 메모리 락을 통한 지터 감소 |
 | **커널 하이브리드** | `main.c` + `mbs_timer.c` | **0.484 s** | HRTimer 기반 주기 동기화 구현 (최고 성능) |
 
-결과적으로 커널 레벨의 타이머(HRTimer)를 사용했을 때 지터가 최소화되어 가장 빠른 정착 시간(0.484s)을 달성함을 정량적으로 실증했습니다.
+결과적으로 커널 레벨의 타이머(HRTimer)를 사용했을 때, 주기가 밀리지 않는 정확한 타이밍 동기화(Drift 제거) 덕분에 지터가 최소화되어 가장 빠른 정착 시간(0.484s)을 달성함을 정량적으로 실증했습니다.
 
 <br>
 
@@ -125,7 +126,7 @@ make
 # [유저 모드 실행 시]
 sudo ./digital_twin
 
-# [유저 모드 RTOS 실행 시]
+# [유저 모드 (RT) 실행 시]
 sudo ./digital_twin2
 
 # [커널 하이브리드 모드 실행 시]

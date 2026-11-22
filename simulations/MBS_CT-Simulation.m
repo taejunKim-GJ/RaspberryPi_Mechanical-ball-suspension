@@ -59,7 +59,7 @@ ts_c = 0.5;              % Settling time
 
 % 2. Target Pole Calculation
 zeta_c = -log(Mp_c) / sqrt(pi^2 + (log(Mp_c))^2);
-wn_c = 3 / (zeta_c * ts_c);     % 5% Setting time criteria
+wn_c = 4 / (zeta_c * ts_c);     % 2% Setting time criteria
 
 sigma_c = -zeta_c * wn_c;
 wd_c = wn_c * sqrt(max(0, 1 - zeta_c^2));
@@ -89,7 +89,7 @@ Mp_o = 0.1;
 ts_o = 0.5; 
 
 zeta_o = -log(Mp_o) / sqrt(pi^2 + (log(Mp_o))^2);
-wn_o = 3 / (zeta_o * ts_o);
+wn_o = 4 / (zeta_o * ts_o);
 
 sigma_o = -zeta_o * wn_o;
 wd_o = wn_o * sqrt(max(0, 1 - zeta_o^2));
